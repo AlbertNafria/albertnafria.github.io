@@ -70,7 +70,7 @@ un dispositivo.
 Cada sistema operativo ofrece un emulador de terminal por defecto, pero siempre
 es posible instalar otra que te guste más. A mí, la que mejor me va es
 `Alacritty`, una terminal muy sobria y que se configura a través del fichero
-`~/alacritty.conf`. Creo que esta aplicación casa más con las otras aplicaciones
+`~/.alacritty.yml`. Creo que esta aplicación casa más con las otras aplicaciones
 que ejecuto a través de ella.
 
 ### Correo electrónico
@@ -92,7 +92,7 @@ muy efectivas.
 
 - `mpv` es un reproductor de vídeo open source, con una interfaz gráfica muy
   sobria por no decir casi inexistente, muy configurable a través de fichero
-  `~/.config/mpv/mpv.conf`, el cual puedes controlar únicamente con atajos de teclado. También
+  `mpv.conf`, el cual puedes controlar únicamente con atajos de teclado. También
   ofrece soporte para el mouse.
 - En lo que refiere a escuchar música, existe una aplicación muy interesante:
   `cmus`. Esta aplicación reproduce **todos** los ficheros de audio que existen,
