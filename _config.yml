@@ -19,7 +19,7 @@
 # in the templates via {{ site.myvariable }}.
 
 title: Mis ideas políticas
-email: albert.nafria@gmail..com
+email: albert.nafria@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Blog en el que escribo sobre temas que me interesan
 baseurl: "" # the subpath of your site, e.g. /blog

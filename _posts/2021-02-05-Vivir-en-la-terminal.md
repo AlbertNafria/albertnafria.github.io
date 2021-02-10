@@ -30,7 +30,7 @@ Interface) sobre de las que disponen una interfaz gráfica son las siguientes:
 - Uso de menos recursos. Las interfaces gráficas consumen muchos recursos,
   utilizar herramientas CLI consigue que la carga de la batería dure más, que el
   ordenador se caliente menos, etc.
-- Facilidad de configuración y ubicuidad. La configuraciones se guardan en
+- Facilidad de configuración y ubicuidad. Las configuraciones se guardan en
   archivos de texto plano, por lo que son fáciles de entender, configurar e
   incluso son más portables entre distintas máquinas.
 - Liberarse del ratón. Algunos programas con CLI tienen soporte para el ratón,
@@ -99,7 +99,7 @@ muy efectivas.
   incluso `flac`, y tiene una *peculiaridad*, y es que solo reproduce música,
   nada más.
 - También se pueden manipular imágenes gracias a los programas incluídos en el
-  paquete `imagemagick`, muy útil sobretodo a la hora de programar tareas
+  [paquete `imagemagick`][imagemagick], muy útil sobretodo a la hora de programar tareas
   repetitivas mediante *scripts*.
 
 
@@ -129,14 +129,14 @@ scroll, acercar o alejar, y todo con sencillos atajos de teclado.
 Aunque existe algún procesador de texto basado en línea de comandos, yo prefiero
 utilizar `Vim` para escribir mis documentos. Como los editores solamente editan
 texto sin formato, a veces es necesario echar mano de lenguajes de marcado para
-poder procesarlos posteriormente y obtener documentos formateados. `markfdown`
+poder procesarlos posteriormente y obtener documentos formateados. `markdown`
 es una buena idea para este trabajo, por su equivalencia con `html`, y para
 obtener documentos de más calidad, `LaTeX`. Este último es más complejo y está
 muy enfocado a documentos científicos, pero para documentos de texto sencillos
 el marcado necesario es muy fácil.
 
-Por último, hay una herramienta, `pandoc`, que convierte documentos de un tipo a
-otro, y trabaja con formatos `docx`, `LaTeX`, `markdown`, `odt`, etc, de modo
+Por último, hay una herramienta, `pandoc`, que convierte ficheros de un formato a
+otro, y trabaja con `docx`, `LaTeX`, `markdown`, `odt`, etc, de modo
 que la limitación es poca.
 
 
@@ -152,3 +152,4 @@ de aprendizaje, pero a la larga vale la pena.
 
 
 [linux_command_line]:https://linuxcommand.org/tlcl.php
+[imagemagick]:https://imagemagick.org/
