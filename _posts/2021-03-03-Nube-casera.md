@@ -28,8 +28,15 @@ Para poner en marcha la Raspberry Pi, primero hay que instalarle un sistema
 operativo en la targeta MicroSD. Yo me decanté por RaspberryOS, desarrollado por
 la misma fundación que comercializa placa, y perfectamente optimizada para ella.
 
-Una vez instalado el SO, y tras actualizar con la orden `sudo apt update`,
-instalé los siguientes programas y dependencias:
+Añadir un fichero vacío con nombre `ssh` y un fichero `wpa_supplicant` con la
+información del wifi.
+
+Para conectarse desde otra máquina mediante *ssh*, podemos encontrar la IP
+mediante el comando `ping raspberrypi.local`.
+
+Una vez instalado el SO, y tras conectarse a la Raspberry Pi mediante *ssh*,
+hay que actualizar con la orden `sudo apt update` e instalar los siguientes
+programas y dependencias:
 
 ```bash
 sudo apt install -y vim tmux git nmap 
@@ -65,8 +72,16 @@ GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@localhost IDENTIFIED BY 'pass
 ```
 
 Ahora ya está Nextcloud funcionando, así que desde otro ordenador nos conectamos
-a la url `raspberrypi.local/nextcloud` desde un navegador. Introducimos los....
+a la url `raspberrypi.local/nextcloud` desde un navegador. Aparecerá la interfaz
+de Nextcloud que nos pedirá un nombre de usuario y contraseña. Después pedirá
+los siguientes campos referidos a la base de datos:
+* Database User: nextcloud
+* Database Password: 'Contraseña de la base de datos'
+* Database Name: nextclooud
+* Host: localhost
 
+Ahora ya podemos empezar a utilizar Nextcloud dentro de la red local,
+conectándonos a la IP de la Raspberry Pi.
 
 ## Monitorizar temperatura con RPi-Monitor
 
