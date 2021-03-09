@@ -20,13 +20,13 @@ pagar Google Drive o Dropbox y olvidarse de problemas, pero me hacía ilusión
 tener la nube en casa.
 
 Para poder tener un servidor Nexcloud en casa, solamente hace falta tener una
-[Raspberry Pi][RaspberryPi] con una targeta MicroSD y conexión a internet.
+[Raspberry Pi][RaspberryPi] con una tarjeta MicroSD y conexión a internet.
 
 ## Instalación del sistema operativo
 
 Para poner en marcha la Raspberry Pi, primero hay que instalarle un sistema
-operativo en la targeta MicroSD. Yo me decanté por RaspberryOS, desarrollado por
-la misma fundación que comercializa placa, y perfectamente optimizada para ella.
+operativo en la tarjeta MicroSD. Yo me decanté por RaspberryOS, desarrollado por
+la misma fundación que comercializa la placa, y perfectamente optimizado para ella.
 
 Añadir un fichero vacío con nombre `ssh` y un fichero `wpa_supplicant` con la
 información del wifi.
@@ -77,7 +77,7 @@ de Nextcloud que nos pedirá un nombre de usuario y contraseña. Después pedir�
 los siguientes campos referidos a la base de datos:
 * Database User: nextcloud
 * Database Password: 'Contraseña de la base de datos'
-* Database Name: nextclooud
+* Database Name: nextcloud
 * Host: localhost
 
 Ahora ya podemos empezar a utilizar Nextcloud dentro de la red local,
@@ -108,8 +108,8 @@ $ sudo /etc/init.d/rpimonitor update
 $ sudo /etc/init.d/rpimonitor install_auto_package_status_update
 ```
 
-También mencionar que para ver la temperatura de la Raspberry Pi desde la línea
-de comandos, se puede ejecutar:
+También cabe mencionar que para obtener la temperatura del procesador de la
+Raspberry Pi desde la línea de comandos, se puede ejecutar:
 ``` bash
 $ /opt/vc/bin/vcgencmd measure_temp
 ```
