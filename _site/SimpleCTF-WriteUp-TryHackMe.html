@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Simple CTF WriteUp TryHackMe</title>
+
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Simple CTF WriteUp TryHackMe | Hacker-Blog</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Simple CTF WriteUp TryHackMe" />
+<meta name="author" content="Albert Nafría" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Simple CTF is a beginner level room on TryHackMe. There are few questions that guide you in which steps have to be done. It took me few hours to complete it as I found problems running the exploit, a python script. First I needed to solve some dependencies, I also modified the code to adapt it to Python3 and finally it worked till the moment of cracking the password." />
+<meta property="og:description" content="Simple CTF is a beginner level room on TryHackMe. There are few questions that guide you in which steps have to be done. It took me few hours to complete it as I found problems running the exploit, a python script. First I needed to solve some dependencies, I also modified the code to adapt it to Python3 and finally it worked till the moment of cracking the password." />
+<meta property="og:site_name" content="Hacker-Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-11-30T15:45:15+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Simple CTF WriteUp TryHackMe" />
+<script type="application/ld+json">
+{"headline":"Simple CTF WriteUp TryHackMe","dateModified":"2021-11-30T15:45:15+01:00","datePublished":"2021-11-30T15:45:15+01:00","url":"/SimpleCTF-WriteUp-TryHackMe","mainEntityOfPage":{"@type":"WebPage","@id":"/SimpleCTF-WriteUp-TryHackMe"},"author":{"@type":"Person","name":"Albert Nafría"},"description":"Simple CTF is a beginner level room on TryHackMe. There are few questions that guide you in which steps have to be done. It took me few hours to complete it as I found problems running the exploit, a python script. First I needed to solve some dependencies, I also modified the code to adapt it to Python3 and finally it worked till the moment of cracking the password.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div>
+    <a href="/">
+    
+    <h1>albert@home:~$</h1>
+    </a>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+<a href="/atom.xml"><h2 class="header-link">RSS</h2></a>
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>Simple CTF WriteUp TryHackMe</h2>
+  <time datetime="2021-11-30T15:45:15+01:00" class="by-line">30 Nov 2021</time>
+  <p>Simple CTF is a beginner level room on TryHackMe. There are few questions that
+guide you in which steps have to be done. It took me few hours to complete it as
+I found problems running the exploit, a python script. First I needed to solve
+some dependencies, I also modified the code to adapt it to Python3 and finally
+it worked till the moment of cracking the password.</p>
+
+<p>Firs, as always, I started enumerating the system. Here is the output of this
+nmap command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nmap <span class="nt">-sCV</span> &lt;ip-address&gt;
+</code></pre></div></div>
+
+<p><img src="img/simpleCTF/nmap.png" alt="nmap" /></p>
+
+<p>Whith this information I could answer some of the questions.</p>
+
+<ul>
+  <li>How many services are running under port 1000?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">2</code></p>
+    </blockquote>
+  </li>
+  <li>What is running on the higher port?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">ssh</code></p>
+    </blockquote>
+  </li>
+</ul>
+
+<p>It has the port 80 open, so I typed the ip in my browser and it displayed the
+default’s apache page. So I run <strong>gobuster</strong> to find hidden directories.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gobuster <span class="nb">dir</span> <span class="nt">-u</span> http://&lt;ip-address&gt; <span class="nt">-x</span> -.txt,.php,.html <span class="nt">-w</span> /usr/share/wordlists/dirb/common.txt <span class="nt">-t</span> 64 <span class="nt">-q</span>
+</code></pre></div></div>
+
+<p><img src="img/simpleCTF/gobuster.png" alt="gobuster" /></p>
+
+<p>It shows the <code class="language-plaintext highlighter-rouge">/simple</code> directory, which could be exploited. Here’s a</p>
+
+<p>Here the point is that this site is using a CMS called <code class="language-plaintext highlighter-rouge">CMS made simple</code>,
+version 2.2.8. I when to <a href="https://www.exploit-db.com/">exploit DB</a> and search
+for exploits for this application. There’s one for that version, and I could
+answer the next question:</p>
+
+<p><img src="img/simpleCTF/exploitDB.png" alt="exploitDB" /></p>
+
+<ul>
+  <li>What’s the CVE you’re using against the application?
+    <blockquote>
+      <p>Answer: CVE-2019-9053</p>
+    </blockquote>
+  </li>
+  <li>To what kind of vulnerability is the application vulnerable?
+    <blockquote>
+      <p>Answer: SQLi</p>
+    </blockquote>
+  </li>
+</ul>
+
+<p>This exploit is the 46635.py and I tried to run it with this command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python /usr/share/exploitdb/exploits/php/webapps/46635.py <span class="nt">-u</span> http://&lt;ip-address&gt;/simple <span class="nt">--crack</span> <span class="nt">-w</span> /usr/share/seclists/Passwords/Common-Credentials/best110.txt
+</code></pre></div></div>
+
+<p>At this point I could answer the next two questions:</p>
+
+<ul>
+  <li>What’s the password?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">secret</code></p>
+    </blockquote>
+  </li>
+  <li>Where can you login with the details obtained?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">ssh</code></p>
+    </blockquote>
+  </li>
+</ul>
+
+<p>Having the user and his password I was able to ssh into the machine and read the
+user’s flag. Also they ask if there’s another user in the home directory</p>
+
+<ul>
+  <li>What’s the user flag?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">G00d j0b, keep up!</code></p>
+    </blockquote>
+  </li>
+  <li>Is there any other user in the home directory? What’s its name?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">sunbath</code></p>
+    </blockquote>
+  </li>
+</ul>
+
+<p>In order to escalate privileges I tried with <code class="language-plaintext highlighter-rouge">sudo -l</code> and found that you can
+run vim as root without the password. That’s an easy one, so in vim as root I
+executed the command <code class="language-plaintext highlighter-rouge">:!sh</code> and immediately had a root shell. I could read the
+root flag and answer the last questions to complete the room.</p>
+
+<p><img src="img/simpleCTF/root.png" alt="ssh" /></p>
+
+<ul>
+  <li>What can you leverage to spawn a privileged shell?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">vim</code></p>
+    </blockquote>
+  </li>
+  <li>What’s the root flag?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">W3ll d0n3. You made it!</code></p>
+    </blockquote>
+  </li>
+</ul>
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="https://creativecommons.org/licenses/by-nc/3.0/deed.en_US">
+    <span>
+        <b>Albert Nafría</b>
+    </span>
+    
+    <span>© 2021</span>
+  </a>
+</footer>
+
+  
+</body>
+
+</html>

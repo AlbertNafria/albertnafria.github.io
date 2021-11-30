@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hacker-Blog</title>
+    <description>A Jekyll Blog Theme For Hackers</description>
+    <link></link>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
+    <author>
+      <name>Albert Nafría</name>
+      <email>albert.nafria@gmail.com</email>
+      <uri>https://albertnafria.github.io</uri>
+    </author>
+    
+      <item>
+        <title>Simple CTF WriteUp TryHackMe</title>
+        <description>&lt;p&gt;Simple CTF is a beginner level room on TryHackMe. There are few questions that
+guide you in which steps have to be done. It took me few hours to complete it as
+I found problems running the exploit, a python script. First I needed to solve
+some dependencies, I also modified the code to adapt it to Python3 and finally
+it worked till the moment of cracking the password.&lt;/p&gt;
+
+&lt;p&gt;Firs, as always, I started enumerating the system. Here is the output of this
+nmap command:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nmap &lt;span class=&quot;nt&quot;&gt;-sCV&lt;/span&gt; &amp;lt;ip-address&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;img/simpleCTF/nmap.png&quot; alt=&quot;nmap&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Whith this information I could answer some of the questions.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;How many services are running under port 1000?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;2&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;What is running on the higher port?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It has the port 80 open, so I typed the ip in my browser and it displayed the
+default’s apache page. So I run &lt;strong&gt;gobuster&lt;/strong&gt; to find hidden directories.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gobuster &lt;span class=&quot;nb&quot;&gt;dir&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; http://&amp;lt;ip-address&amp;gt; &lt;span class=&quot;nt&quot;&gt;-x&lt;/span&gt; -.txt,.php,.html &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; /usr/share/wordlists/dirb/common.txt &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; 64 &lt;span class=&quot;nt&quot;&gt;-q&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;img/simpleCTF/gobuster.png&quot; alt=&quot;gobuster&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It shows the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/simple&lt;/code&gt; directory, which could be exploited. Here’s a&lt;/p&gt;
+
+&lt;p&gt;Here the point is that this site is using a CMS called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CMS made simple&lt;/code&gt;,
+version 2.2.8. I when to &lt;a href=&quot;https://www.exploit-db.com/&quot;&gt;exploit DB&lt;/a&gt; and search
+for exploits for this application. There’s one for that version, and I could
+answer the next question:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;img/simpleCTF/exploitDB.png&quot; alt=&quot;exploitDB&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;What’s the CVE you’re using against the application?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: CVE-2019-9053&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;To what kind of vulnerability is the application vulnerable?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: SQLi&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This exploit is the 46635.py and I tried to run it with this command:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python /usr/share/exploitdb/exploits/php/webapps/46635.py &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; http://&amp;lt;ip-address&amp;gt;/simple &lt;span class=&quot;nt&quot;&gt;--crack&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; /usr/share/seclists/Passwords/Common-Credentials/best110.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;At this point I could answer the next two questions:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;What’s the password?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;secret&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Where can you login with the details obtained?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Having the user and his password I was able to ssh into the machine and read the
+user’s flag. Also they ask if there’s another user in the home directory&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;What’s the user flag?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;G00d j0b, keep up!&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Is there any other user in the home directory? What’s its name?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sunbath&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In order to escalate privileges I tried with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo -l&lt;/code&gt; and found that you can
+run vim as root without the password. That’s an easy one, so in vim as root I
+executed the command &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;:!sh&lt;/code&gt; and immediately had a root shell. I could read the
+root flag and answer the last questions to complete the room.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;img/simpleCTF/root.png&quot; alt=&quot;ssh&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;What can you leverage to spawn a privileged shell?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vim&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;What’s the root flag?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;W3ll d0n3. You made it!&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Tue, 30 Nov 2021 15:45:15 +0100</pubDate>
+        <link>//SimpleCTF-WriteUp-TryHackMe</link>
+        <link href="/SimpleCTF-WriteUp-TryHackMe"/>
+        <guid isPermaLink="true">/SimpleCTF-WriteUp-TryHackMe</guid>
+      </item>
+    
+      <item>
+        <title>Hydra WriteUp TryHackMe</title>
+        <description>&lt;p&gt;This room is very short comared to others and very straightforward. It’s part
+of the &lt;strong&gt;Comptia Pentest+&lt;/strong&gt; path. Hydra is a pentest tool for cracking paswords
+with brute force.  The first task of the room is about what is that tool for and
+how to install it.  As it says, Hydra &lt;em&gt;bruteforces&lt;/em&gt; authentication in SSH, Web
+Application Forms, FTP and SNMP. Also there’s a long list of protocols Hydra has
+the ability to crack. It’s an essential tool for the pentester.&lt;/p&gt;
+
+&lt;p&gt;Hydra is preinstalled in Kali Linux, so I could execute it from a
+Kali Docker container on my Mac machine.&lt;/p&gt;
+
+&lt;p&gt;On the second task there are few examples of the usage of this tool and an
+explanation of what the parameters mean. It is more or less what we are going to
+use to get the flags.  This is my walkthrough on this room.&lt;/p&gt;
+
+&lt;h2 id=&quot;task-1-hydra-introduction&quot;&gt;Task 1: Hydra Introduction&lt;/h2&gt;
+
+&lt;p&gt;Read the above and have Hydra at the ready.&lt;/p&gt;
+
+&lt;h2 id=&quot;task-2-using-hydra&quot;&gt;Task 2: Using Hydra&lt;/h2&gt;
+
+&lt;p&gt;I first deployed the machine and executed nmap for a quick recognisement. Nmap
+shows that has 2 ports open, 22 and 80. Then I type the IP in the browser and it
+appears a login form whith an image of Hydra, the many-headed snake from the
+greek mythology.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Use Hydra to bruteforce molly’s web password. What is flag 1?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The same question gives us the username which we are going to attempt to get its
+password. I used the same command given before with one difference, the
+directory Hydra will bruteforce is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/login&lt;/code&gt; instead of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/&lt;/code&gt;, as when I browsed
+the IP it redirected me to that directory. The dictionary used waw the
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rockyou.txt&lt;/code&gt;, like always I try to crack passwords, and as you can see in the
+image it worked after very few attempts.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hydra &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; molly &lt;span class=&quot;nt&quot;&gt;-P&lt;/span&gt; /usr/share/wordlists/rockyou.txt 10.10.166.99 http-post-form &lt;span class=&quot;s2&quot;&gt;&quot;/login:username=^USER^&amp;amp;password=^PASS^:F=incorrect&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-V&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/output_post.png&quot; alt=&quot;Hydra output&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Then I logged in whith that credentials and got the flag 1.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/login.png&quot; alt=&quot;login&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Use Hydra to bruteforce molly’s SSH password. What is flag 2?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Port 22 is also open so knowing the user &lt;strong&gt;molly&lt;/strong&gt; we can try to crack the
+password and ssh into the machine. The command I used this time was this:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hydra &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; molly &lt;span class=&quot;nt&quot;&gt;-P&lt;/span&gt; /usr/share/wordlists/rockyou.txt 10.10.166.99 &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; 4 ssh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/output_ssh.png&quot; alt=&quot;Hydra output&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It didn’t take long and after cracking the password I could ssh into the machine and
+the flag was the content of the file &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;user.txt&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/ssh.png&quot; alt=&quot;ssh login&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see, this room is very short and fast to do, but so useful at the
+same time since &lt;strong&gt;Hydra&lt;/strong&gt; is a very important tool for password cracking. It also
+shows the importance of using strong passwords because it’s so easy to crack the
+most predictable ones.&lt;/p&gt;
+</description>
+        <pubDate>Sun, 28 Nov 2021 15:45:15 +0100</pubDate>
+        <link>//Hydra-WriteUp-TryHackMe</link>
+        <link href="/Hydra-WriteUp-TryHackMe"/>
+        <guid isPermaLink="true">/Hydra-WriteUp-TryHackMe</guid>
+      </item>
+    
+      <item>
+        <title>Nube casera con Nextcloud</title>
+        <description>&lt;h2 id=&quot;una-nube-casera-con-raspberry-pi&quot;&gt;Una nube casera con Raspberry Pi&lt;/h2&gt;
+
+&lt;p&gt;Dado que en mi día a día utilizo dos máquinas distintas, un MacBook Pro y un
+portátil HP viejito con &lt;a href=&quot;https://ubuntu-mate.org&quot;&gt;Ubuntu Mate&lt;/a&gt;, decidí hacer un servidor de
+Nextcloud en una Raspberry Pi 3 para tener así los ficheros sincronizados.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://nextcloud.org&quot;&gt;Nextcloud&lt;/a&gt; es un proyecto &lt;em&gt;open source&lt;/em&gt; para alojar contenido en un
+servidor que, al ser código abierto, puedes instalar en un servidor propio y no
+tener que pagar por los servicios. La verdad es que pienso que es más cómodo
+pagar Google Drive o Dropbox y olvidarse de problemas, pero me hacía ilusión
+tener la nube en casa.&lt;/p&gt;
+
+&lt;p&gt;Para poder tener un servidor Nexcloud en casa, solamente hace falta tener una
+&lt;a href=&quot;https://raspberrypi.org&quot;&gt;Raspberry Pi&lt;/a&gt; con una tarjeta MicroSD y conexión a internet.&lt;/p&gt;
+
+&lt;h2 id=&quot;instalación-del-sistema-operativo&quot;&gt;Instalación del sistema operativo&lt;/h2&gt;
+
+&lt;p&gt;Para poner en marcha la Raspberry Pi, primero hay que instalarle un sistema
+operativo en la tarjeta MicroSD. Yo me decanté por RaspberryOS, desarrollado por
+la misma fundación que comercializa la placa, y perfectamente optimizado para ella.&lt;/p&gt;
+
+&lt;p&gt;Añadir un fichero vacío con nombre &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh&lt;/code&gt; y un fichero &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wpa_supplicant&lt;/code&gt; con la
+información del wifi.&lt;/p&gt;
+
+&lt;p&gt;Para conectarse desde otra máquina mediante &lt;em&gt;ssh&lt;/em&gt;, podemos encontrar la IP
+mediante el comando &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ping raspberrypi.local&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Una vez instalado el SO, y tras conectarse a la Raspberry Pi mediante &lt;em&gt;ssh&lt;/em&gt;,
+hay que actualizar con la orden &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo apt update&lt;/code&gt; e instalar los siguientes
+programas y dependencias:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; vim tmux git nmap 
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; apache2 mariadb-server libapache2-mod-php
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; php-gd php-json php-mysql php-curl php-mbstring
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; php-intl php-mcrypt php-imagick php-xml php-zip
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;instalación-de-nextcloud&quot;&gt;Instalación de Nextcloud&lt;/h2&gt;
+
+&lt;p&gt;Con el comando &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wget&lt;/code&gt; descargué la &lt;a href=&quot;https://download.nextcloud.com/server/releases/nextcloud-21.0.0.zip&quot;&gt;versión más reciente&lt;/a&gt; de
+Nextcloud en el directorio &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/srv/&lt;/code&gt; de la Raspberry Pi. Lo descomprimí en el
+mismo directorio y después creé un enlace simbólico al servidor Apache para
+poderlo ver desde un navegador.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /srv
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo mkdir &lt;/span&gt;nextcloud
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;wget https://download.nextcloud.com/server/releases/nextcloud-20.0.7.zip &lt;span class=&quot;nt&quot;&gt;-O&lt;/span&gt; /srv/nextcloud.zip
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;unzip nextcloud.zip
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo ln&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; /srv/nextcloud /var/www/html/nextcloud
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo chown&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-R&lt;/span&gt; www-data:www-data /srv/nextcloud
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Seguidamente configuré la base de datos con las órdenes que siguen:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-mysql&quot;&gt;$ sudo mysql
+CREATE USER 'nextcloud' IDENTIFIED BY 'password';
+CREATE DATABASE nextcloud;
+GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@localhost IDENTIFIED BY 'password';
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ahora ya está Nextcloud funcionando, así que desde otro ordenador nos conectamos
+a la url &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;raspberrypi.local/nextcloud&lt;/code&gt; desde un navegador. Aparecerá la interfaz
+de Nextcloud que nos pedirá un nombre de usuario y contraseña. Después pedirá
+los siguientes campos referidos a la base de datos:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Database User: nextcloud&lt;/li&gt;
+  &lt;li&gt;Database Password: ‘Contraseña de la base de datos’&lt;/li&gt;
+  &lt;li&gt;Database Name: nextcloud&lt;/li&gt;
+  &lt;li&gt;Host: localhost&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Ahora ya podemos empezar a utilizar Nextcloud dentro de la red local,
+conectándonos a la IP de la Raspberry Pi.&lt;/p&gt;
+
+&lt;h2 id=&quot;monitorizar-temperatura-con-rpi-monitor&quot;&gt;Monitorizar temperatura con RPi-Monitor&lt;/h2&gt;
+
+&lt;p&gt;Para poder monitorizar la Raspberry Pi desde un navegador, hay una aplicación
+muy interesante, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rpimonitor&lt;/code&gt;. Para poderla instalarla hay que tener antes los
+siguientes certificados:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;apt-transport-https ca-certificates
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;wget https://goo.gl/vewCLL &lt;span class=&quot;nt&quot;&gt;-O&lt;/span&gt; /etc/apt/sources.list.d/rpimonitor.list
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-key adv &lt;span class=&quot;nt&quot;&gt;--recv-keys&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--keyserver&lt;/span&gt; keyserver.ubuntu.com 2C0D3C0F
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt update
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;rpimonitor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Una vez está todo instalado podemos acceder desde el navegador a una interfaz
+muy sobria desde donde controlar la Raspberry desde la URL &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;raspberrypi.local:8888&lt;/code&gt;.
+La primera vez que se instala &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rpimonitor&lt;/code&gt; hay que solucionar unos errores con
+los siguientes comandos:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; /etc/init.d/rpimonitor update
+&lt;span class=&quot;c&quot;&gt;# Para automatizar el update&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; /etc/init.d/rpimonitor install_auto_package_status_update
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;También cabe mencionar que para obtener la temperatura del procesador de la
+Raspberry Pi desde la línea de comandos, se puede ejecutar:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;/opt/vc/bin/vcgencmd measure_temp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+</description>
+        <pubDate>Wed, 03 Mar 2021 19:45:15 +0100</pubDate>
+        <link>//Nube-casera</link>
+        <link href="/Nube-casera"/>
+        <guid isPermaLink="true">/Nube-casera</guid>
+      </item>
+    
+      <item>
+        <title>Vivir en el terminal</title>
+        <description>&lt;h2 id=&quot;interfaz-línea-de-comandos&quot;&gt;Interfaz línea de comandos&lt;/h2&gt;
+
+&lt;p&gt;Hace exactamente un año me propuse aprender a utilizar la terminal de mi
+portátil, motivado en parte por la fascinación que me producía ver como, a golpe
+de teclado, era posible hacer tanto, y por la frustración que me producían
+algunas tareas muy repetitivas que solía hacer. Desde entonces he cambiado
+diametralmente mi manera de trabajar con el ordenador, todo gracias a las
+diferentes herramientas que pueden ejecutarse en un &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;shell&lt;/code&gt; de &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Unix&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Podría decir que gran parte de la culpa la tiene &lt;a href=&quot;https://linuxcommand.org/tlcl.php&quot;&gt;este libro&lt;/a&gt;, muy
+completo y ameno, que cubre gran parte de las posiblidades de la línea de
+comandos partiendo desde el principio. Puede servir de referencia tanto para el
+novato como para alguien con algo de experiencia. Además, la página web dispone
+de mucho material adicional para profundizar en algunos temas, como los
+&lt;em&gt;shell scripts&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Las principales ventajas que he encontrado en las herramientas CLI (Command Line
+Interface) sobre de las que disponen una interfaz gráfica son las siguientes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Uso de menos recursos. Las interfaces gráficas consumen muchos recursos,
+utilizar herramientas CLI consigue que la carga de la batería dure más, que el
+ordenador se caliente menos, etc.&lt;/li&gt;
+  &lt;li&gt;Facilidad de configuración y ubicuidad. Las configuraciones se guardan en
+archivos de texto plano, por lo que son fáciles de entender, configurar e
+incluso son más portables entre distintas máquinas.&lt;/li&gt;
+  &lt;li&gt;Liberarse del ratón. Algunos programas con CLI tienen soporte para el ratón,
+pero en general, el principal método de entrada es el teclado. De esta manera
+se gana en productividad, rapidez y comodidad de no ir moviendo la mano del
+teclado al ratón y viceversa.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;En algún sitio leí que la diferencia entre utilizar una línea de comandos o una
+interfaz gráfica es la misma que mantener una conversación o gritar. A
+continuación haré un pequeño repaso del &lt;em&gt;software&lt;/em&gt; que utilizo normalmente.&lt;/p&gt;
+
+&lt;h2 id=&quot;hay-software-para-todo&quot;&gt;Hay software para todo&lt;/h2&gt;
+
+&lt;p&gt;Quizá la herramienta más importante a la hora de trabajar desde una terminal sea el
+editor de texto. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Vim&lt;/code&gt; es el editor de los sistemas &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Unix&lt;/code&gt; por excelencia, y a pesar de tener
+una curva de aprendizaje muy inclinada, creo que a la larga vale la pena el
+tiempo invertido en aprenderlo.&lt;/p&gt;
+
+&lt;p&gt;Otro programa básico para trabajar cómodamente es el &lt;strong&gt;multiplexor de
+terminal&lt;/strong&gt;. Los dos más conocidos son &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Screen&lt;/code&gt; y &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Tmux&lt;/code&gt;, aunque el segundo es
+más moderno y avanzado. Esto te permite tener varias sesiones virtuales dentro
+de un solo terminal y poder visualizar esas sesiones en distintas ventanas o
+pestañas dentro de la terminal.&lt;/p&gt;
+
+&lt;p&gt;De hecho, lo primero que hago al encender el ordenador es abrir una terminal y
+ejecutar &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Tmux&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;emulador-de-terminal&quot;&gt;Emulador de terminal&lt;/h3&gt;
+
+&lt;p&gt;Paradójicamente, para trabajar desde la línea de comandos hacemos uso de una herramienta con
+interfaz gráfica: el &lt;em&gt;emulador de terminal&lt;/em&gt;. Se llama emulador porque intenta
+recrear las terminales de los teletipos del pasado, pero siendo software en vez de
+un dispositivo.&lt;/p&gt;
+
+&lt;p&gt;Cada sistema operativo ofrece un emulador de terminal por defecto, pero siempre
+es posible instalar otra que te guste más. A mí, la que mejor me va es
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Alacritty&lt;/code&gt;, una terminal muy sobria y que se configura a través del fichero
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.alacritty.yml&lt;/code&gt;. Creo que esta aplicación casa más con las otras aplicaciones
+que ejecuto a través de ella.&lt;/p&gt;
+
+&lt;h3 id=&quot;correo-electrónico&quot;&gt;Correo electrónico&lt;/h3&gt;
+
+&lt;p&gt;Otra de las tareas más comunes a la hora de trabajar con un ordenador es
+consultar el email. Una aplicación interesante es &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mutt&lt;/code&gt;, un cliente de email
+muy potente y configurable que facilita mucho el uso del correo, especialmente
+cuando el &lt;em&gt;buzón de entrada&lt;/em&gt; está muy lleno. Sin apartar las manos del teclado
+es posible gestionar todo con unas pocas teclas. Como reza el eslógan de &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mutt&lt;/code&gt;,
+&lt;em&gt;all mail clients suck. This one just sucks less&lt;/em&gt;. Es curioso que el año pasado
+cumpliera 25 años y aún siga siendo tan útil…&lt;/p&gt;
+
+&lt;h3 id=&quot;contenidos-multimedia&quot;&gt;Contenidos multimedia&lt;/h3&gt;
+
+&lt;p&gt;La interfaz de línea de comandos está fuertemente basada en el texto, pero
+también hace posible trabajar con otros tipos de ficheros. Hay algunas
+herramientas para reproducir contenidos multimedia que son fáciles de utilizar y
+muy efectivas.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mpv&lt;/code&gt; es un reproductor de vídeo open source, con una interfaz gráfica muy
+sobria por no decir casi inexistente, muy configurable a través de fichero
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mpv.conf&lt;/code&gt;, el cual puedes controlar únicamente con atajos de teclado. También
+ofrece soporte para el mouse.&lt;/li&gt;
+  &lt;li&gt;En lo que refiere a escuchar música, existe una aplicación muy interesante:
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cmus&lt;/code&gt;. Esta aplicación reproduce &lt;strong&gt;todos&lt;/strong&gt; los ficheros de audio que existen,
+incluso &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;flac&lt;/code&gt;, y tiene una &lt;em&gt;peculiaridad&lt;/em&gt;, y es que solo reproduce música,
+nada más.&lt;/li&gt;
+  &lt;li&gt;También se pueden manipular imágenes gracias a los programas incluídos en el
+&lt;a href=&quot;https://imagemagick.org/&quot;&gt;paquete &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;imagemagick&lt;/code&gt;&lt;/a&gt;, muy útil sobretodo a la hora de programar tareas
+repetitivas mediante &lt;em&gt;scripts&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;navegar-por-la-web&quot;&gt;Navegar por la web&lt;/h3&gt;
+
+&lt;p&gt;Cómo no, en modo texto también es posible visitar páginas web. La única
+peculiaridad es que los navegadores son basados en texto, por lo que solamente
+renderizan el contenido &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;html&lt;/code&gt;, sin ejecutar &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;javascript&lt;/code&gt; ni formatear con
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;css&lt;/code&gt;. Eso puede ser un problema o una ventaja, a veces tiene sentido navegar por
+internet sin las distracciones de los anuncios o las políticas de cookies, y las
+páginas con contenido estático se ven prácticamente igual.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/google-w3m.png&quot; alt=&quot;Google en la terminal&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Hay varios navegadores basados en texto, pero mi favorito es &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;w3m&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;visualizador-de-pdf&quot;&gt;Visualizador de PDF&lt;/h3&gt;
+
+&lt;p&gt;Para los que están acostumbrados a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Vim&lt;/code&gt; hay un visor de pdf, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Zathura&lt;/code&gt;, que
+utiliza los mismos atajos de teclado. Es una herramienta muy útil para leer
+ficheros en pdf sin necesidad de quitar las manos del teclado. Se puede hacer
+scroll, acercar o alejar, y todo con sencillos atajos de teclado.&lt;/p&gt;
+
+&lt;h2 id=&quot;lenguajes-de-marcado&quot;&gt;Lenguajes de marcado&lt;/h2&gt;
+
+&lt;p&gt;Aunque existe algún procesador de texto basado en línea de comandos, yo prefiero
+utilizar &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Vim&lt;/code&gt; para escribir mis documentos. Como los editores solamente editan
+texto sin formato, a veces es necesario echar mano de lenguajes de marcado para
+poder procesarlos posteriormente y obtener documentos formateados. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;markdown&lt;/code&gt;
+es una buena idea para este trabajo, por su equivalencia con &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;html&lt;/code&gt;, y para
+obtener documentos de más calidad, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LaTeX&lt;/code&gt;. Este último es más complejo y está
+muy enfocado a documentos científicos, pero para documentos de texto sencillos
+el marcado necesario es muy fácil.&lt;/p&gt;
+
+&lt;p&gt;Por último, hay una herramienta, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pandoc&lt;/code&gt;, que convierte ficheros de un formato a
+otro, y trabaja con &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docx&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LaTeX&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;markdown&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;odt&lt;/code&gt;, etc, de modo
+que la limitación es poca.&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusión&quot;&gt;Conclusión&lt;/h2&gt;
+
+&lt;p&gt;Quería hacer un pequeño viaje a través de algunas aplicaciones que utilizo en mi
+día a día y que, por su minimalismo y sencillez, facilitan mucho el flujo de
+trabajo. Por otro lado, hoy en día la línea de comandos es &lt;strong&gt;totalmente&lt;/strong&gt;
+&lt;strong&gt;prescindible&lt;/strong&gt;, hay herramientas gráficas para todo, incluso para las tareas
+de administración de sistemas más complejas. El principal problema es la curva
+de aprendizaje, pero a la larga vale la pena.&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 05 Feb 2021 19:16:07 +0100</pubDate>
+        <link>//Vivir-en-la-terminal</link>
+        <link href="/Vivir-en-la-terminal"/>
+        <guid isPermaLink="true">/Vivir-en-la-terminal</guid>
+      </item>
+    
+  </channel>
+</rss>

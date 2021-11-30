@@ -1,0 +1,104 @@
+I"�<h2 id="una-nube-casera-con-raspberry-pi">Una nube casera con Raspberry Pi</h2>
+
+<p>Dado que en mi día a día utilizo dos máquinas distintas, un MacBook Pro y un
+portátil HP viejito con <a href="https://ubuntu-mate.org">Ubuntu Mate</a>, decidí hacer un servidor de
+Nextcloud en una Raspberry Pi 3 para tener así los ficheros sincronizados.</p>
+
+<p><a href="https://nextcloud.org">Nextcloud</a> es un proyecto <em>open source</em> para alojar contenido en un
+servidor que, al ser código abierto, puedes instalar en un servidor propio y no
+tener que pagar por los servicios. La verdad es que pienso que es más cómodo
+pagar Google Drive o Dropbox y olvidarse de problemas, pero me hacía ilusión
+tener la nube en casa.</p>
+
+<p>Para poder tener un servidor Nexcloud en casa, solamente hace falta tener una
+<a href="https://raspberrypi.org">Raspberry Pi</a> con una tarjeta MicroSD y conexión a internet.</p>
+
+<h2 id="instalación-del-sistema-operativo">Instalación del sistema operativo</h2>
+
+<p>Para poner en marcha la Raspberry Pi, primero hay que instalarle un sistema
+operativo en la tarjeta MicroSD. Yo me decanté por RaspberryOS, desarrollado por
+la misma fundación que comercializa la placa, y perfectamente optimizado para ella.</p>
+
+<p>Añadir un fichero vacío con nombre <code class="language-plaintext highlighter-rouge">ssh</code> y un fichero <code class="language-plaintext highlighter-rouge">wpa_supplicant</code> con la
+información del wifi.</p>
+
+<p>Para conectarse desde otra máquina mediante <em>ssh</em>, podemos encontrar la IP
+mediante el comando <code class="language-plaintext highlighter-rouge">ping raspberrypi.local</code>.</p>
+
+<p>Una vez instalado el SO, y tras conectarse a la Raspberry Pi mediante <em>ssh</em>,
+hay que actualizar con la orden <code class="language-plaintext highlighter-rouge">sudo apt update</code> e instalar los siguientes
+programas y dependencias:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install</span> <span class="nt">-y</span> vim tmux git nmap 
+<span class="nb">sudo </span>apt <span class="nb">install</span> <span class="nt">-y</span> apache2 mariadb-server libapache2-mod-php
+<span class="nb">sudo </span>apt <span class="nb">install</span> <span class="nt">-y</span> php-gd php-json php-mysql php-curl php-mbstring
+<span class="nb">sudo </span>apt <span class="nb">install</span> <span class="nt">-y</span> php-intl php-mcrypt php-imagick php-xml php-zip
+</code></pre></div></div>
+
+<h2 id="instalación-de-nextcloud">Instalación de Nextcloud</h2>
+
+<p>Con el comando <code class="language-plaintext highlighter-rouge">wget</code> descargué la <a href="https://download.nextcloud.com/server/releases/nextcloud-21.0.0.zip">versión más reciente</a> de
+Nextcloud en el directorio <code class="language-plaintext highlighter-rouge">/srv/</code> de la Raspberry Pi. Lo descomprimí en el
+mismo directorio y después creé un enlace simbólico al servidor Apache para
+poderlo ver desde un navegador.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd</span> /srv
+<span class="nv">$ </span><span class="nb">sudo mkdir </span>nextcloud
+<span class="nv">$ </span><span class="nb">sudo </span>wget https://download.nextcloud.com/server/releases/nextcloud-20.0.7.zip <span class="nt">-O</span> /srv/nextcloud.zip
+<span class="nv">$ </span>unzip nextcloud.zip
+<span class="nv">$ </span><span class="nb">sudo ln</span> <span class="nt">-s</span> /srv/nextcloud /var/www/html/nextcloud
+<span class="nv">$ </span><span class="nb">sudo chown</span> <span class="nt">-R</span> www-data:www-data /srv/nextcloud
+</code></pre></div></div>
+
+<p>Seguidamente configuré la base de datos con las órdenes que siguen:</p>
+
+<pre><code class="language-mysql">$ sudo mysql
+CREATE USER 'nextcloud' IDENTIFIED BY 'password';
+CREATE DATABASE nextcloud;
+GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@localhost IDENTIFIED BY 'password';
+
+</code></pre>
+
+<p>Ahora ya está Nextcloud funcionando, así que desde otro ordenador nos conectamos
+a la url <code class="language-plaintext highlighter-rouge">raspberrypi.local/nextcloud</code> desde un navegador. Aparecerá la interfaz
+de Nextcloud que nos pedirá un nombre de usuario y contraseña. Después pedirá
+los siguientes campos referidos a la base de datos:</p>
+<ul>
+  <li>Database User: nextcloud</li>
+  <li>Database Password: ‘Contraseña de la base de datos’</li>
+  <li>Database Name: nextcloud</li>
+  <li>Host: localhost</li>
+</ul>
+
+<p>Ahora ya podemos empezar a utilizar Nextcloud dentro de la red local,
+conectándonos a la IP de la Raspberry Pi.</p>
+
+<h2 id="monitorizar-temperatura-con-rpi-monitor">Monitorizar temperatura con RPi-Monitor</h2>
+
+<p>Para poder monitorizar la Raspberry Pi desde un navegador, hay una aplicación
+muy interesante, <code class="language-plaintext highlighter-rouge">rpimonitor</code>. Para poderla instalarla hay que tener antes los
+siguientes certificados:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get <span class="nb">install </span>apt-transport-https ca-certificates
+<span class="nb">sudo </span>wget https://goo.gl/vewCLL <span class="nt">-O</span> /etc/apt/sources.list.d/rpimonitor.list
+<span class="nb">sudo </span>apt-key adv <span class="nt">--recv-keys</span> <span class="nt">--keyserver</span> keyserver.ubuntu.com 2C0D3C0F
+<span class="nb">sudo </span>apt update
+<span class="nb">sudo </span>apt <span class="nb">install </span>rpimonitor
+</code></pre></div></div>
+
+<p>Una vez está todo instalado podemos acceder desde el navegador a una interfaz
+muy sobria desde donde controlar la Raspberry desde la URL <code class="language-plaintext highlighter-rouge">raspberrypi.local:8888</code>.
+La primera vez que se instala <code class="language-plaintext highlighter-rouge">rpimonitor</code> hay que solucionar unos errores con
+los siguientes comandos:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo</span> /etc/init.d/rpimonitor update
+<span class="c"># Para automatizar el update</span>
+<span class="nv">$ </span><span class="nb">sudo</span> /etc/init.d/rpimonitor install_auto_package_status_update
+</code></pre></div></div>
+
+<p>También cabe mencionar que para obtener la temperatura del procesador de la
+Raspberry Pi desde la línea de comandos, se puede ejecutar:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>/opt/vc/bin/vcgencmd measure_temp
+</code></pre></div></div>
+
+:ET

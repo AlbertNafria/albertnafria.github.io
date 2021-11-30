@@ -1,0 +1,7 @@
+I"�<p>This room is a pretty short and very straightforward one. It’s part of the <strong>Comptia
+Pentest+</strong> path. Hydra is a pentest tool for cracking paswords with brute force.
+The first task of the room is about what is that tool for and how to install it.
+As it says, Hydra <em>bruteforces</em> authentication in SSH, Web Application Forms,
+FTP and SNMP. Also there’s a long list of protocols Hydra has the ability to
+crack. It’s an essential tool for the pentester.</p>
+:ET

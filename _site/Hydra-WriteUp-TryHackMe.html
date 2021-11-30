@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Hydra WriteUp TryHackMe</title>
+
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Hydra WriteUp TryHackMe | Hacker-Blog</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Hydra WriteUp TryHackMe" />
+<meta name="author" content="Albert Nafría" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="This room is very short comared to others and very straightforward. It’s part of the Comptia Pentest+ path. Hydra is a pentest tool for cracking paswords with brute force. The first task of the room is about what is that tool for and how to install it. As it says, Hydra bruteforces authentication in SSH, Web Application Forms, FTP and SNMP. Also there’s a long list of protocols Hydra has the ability to crack. It’s an essential tool for the pentester." />
+<meta property="og:description" content="This room is very short comared to others and very straightforward. It’s part of the Comptia Pentest+ path. Hydra is a pentest tool for cracking paswords with brute force. The first task of the room is about what is that tool for and how to install it. As it says, Hydra bruteforces authentication in SSH, Web Application Forms, FTP and SNMP. Also there’s a long list of protocols Hydra has the ability to crack. It’s an essential tool for the pentester." />
+<meta property="og:site_name" content="Hacker-Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-11-28T15:45:15+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Hydra WriteUp TryHackMe" />
+<script type="application/ld+json">
+{"headline":"Hydra WriteUp TryHackMe","dateModified":"2021-11-28T15:45:15+01:00","datePublished":"2021-11-28T15:45:15+01:00","url":"/Hydra-WriteUp-TryHackMe","mainEntityOfPage":{"@type":"WebPage","@id":"/Hydra-WriteUp-TryHackMe"},"author":{"@type":"Person","name":"Albert Nafría"},"description":"This room is very short comared to others and very straightforward. It’s part of the Comptia Pentest+ path. Hydra is a pentest tool for cracking paswords with brute force. The first task of the room is about what is that tool for and how to install it. As it says, Hydra bruteforces authentication in SSH, Web Application Forms, FTP and SNMP. Also there’s a long list of protocols Hydra has the ability to crack. It’s an essential tool for the pentester.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div>
+    <a href="/">
+    
+    <h1>albert@home:~$</h1>
+    </a>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+<a href="/atom.xml"><h2 class="header-link">RSS</h2></a>
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>Hydra WriteUp TryHackMe</h2>
+  <time datetime="2021-11-28T15:45:15+01:00" class="by-line">28 Nov 2021</time>
+  <p>This room is very short comared to others and very straightforward. It’s part
+of the <strong>Comptia Pentest+</strong> path. Hydra is a pentest tool for cracking paswords
+with brute force.  The first task of the room is about what is that tool for and
+how to install it.  As it says, Hydra <em>bruteforces</em> authentication in SSH, Web
+Application Forms, FTP and SNMP. Also there’s a long list of protocols Hydra has
+the ability to crack. It’s an essential tool for the pentester.</p>
+
+<p>Hydra is preinstalled in Kali Linux, so I could execute it from a
+Kali Docker container on my Mac machine.</p>
+
+<p>On the second task there are few examples of the usage of this tool and an
+explanation of what the parameters mean. It is more or less what we are going to
+use to get the flags.  This is my walkthrough on this room.</p>
+
+<h2 id="task-1-hydra-introduction">Task 1: Hydra Introduction</h2>
+
+<p>Read the above and have Hydra at the ready.</p>
+
+<h2 id="task-2-using-hydra">Task 2: Using Hydra</h2>
+
+<p>I first deployed the machine and executed nmap for a quick recognisement. Nmap
+shows that has 2 ports open, 22 and 80. Then I type the IP in the browser and it
+appears a login form whith an image of Hydra, the many-headed snake from the
+greek mythology.</p>
+
+<ul>
+  <li>Use Hydra to bruteforce molly’s web password. What is flag 1?</li>
+</ul>
+
+<p>The same question gives us the username which we are going to attempt to get its
+password. I used the same command given before with one difference, the
+directory Hydra will bruteforce is <code class="language-plaintext highlighter-rouge">/login</code> instead of <code class="language-plaintext highlighter-rouge">/</code>, as when I browsed
+the IP it redirected me to that directory. The dictionary used waw the
+<code class="language-plaintext highlighter-rouge">rockyou.txt</code>, like always I try to crack passwords, and as you can see in the
+image it worked after very few attempts.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hydra <span class="nt">-l</span> molly <span class="nt">-P</span> /usr/share/wordlists/rockyou.txt 10.10.166.99 http-post-form <span class="s2">"/login:username=^USER^&amp;password=^PASS^:F=incorrect"</span> <span class="nt">-V</span>
+</code></pre></div></div>
+
+<p><img src="/img/output_post.png" alt="Hydra output" /></p>
+
+<p>Then I logged in whith that credentials and got the flag 1.</p>
+
+<p><img src="/img/login.png" alt="login" /></p>
+
+<ul>
+  <li>Use Hydra to bruteforce molly’s SSH password. What is flag 2?</li>
+</ul>
+
+<p>Port 22 is also open so knowing the user <strong>molly</strong> we can try to crack the
+password and ssh into the machine. The command I used this time was this:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hydra <span class="nt">-l</span> molly <span class="nt">-P</span> /usr/share/wordlists/rockyou.txt 10.10.166.99 <span class="nt">-t</span> 4 ssh
+</code></pre></div></div>
+
+<p><img src="/img/output_ssh.png" alt="Hydra output" /></p>
+
+<p>It didn’t take long and after cracking the password I could ssh into the machine and
+the flag was the content of the file <code class="language-plaintext highlighter-rouge">user.txt</code>.</p>
+
+<p><img src="/img/ssh.png" alt="ssh login" /></p>
+
+<p>As you can see, this room is very short and fast to do, but so useful at the
+same time since <strong>Hydra</strong> is a very important tool for password cracking. It also
+shows the importance of using strong passwords because it’s so easy to crack the
+most predictable ones.</p>
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="https://creativecommons.org/licenses/by-nc/3.0/deed.en_US">
+    <span>
+        <b>Albert Nafría</b>
+    </span>
+    
+    <span>© 2021</span>
+  </a>
+</footer>
+
+  
+</body>
+
+</html>

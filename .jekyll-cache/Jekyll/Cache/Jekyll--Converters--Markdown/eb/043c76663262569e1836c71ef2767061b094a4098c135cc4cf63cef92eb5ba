@@ -1,0 +1,6 @@
+I"y<p>Simple CTF is a beginner level room on TryHackMe. There are few questions that
+guide you in which steps have to be done. It took me few hours to complete it as
+I found problems running the exploit, a python script. First I needed to solve
+some dependencies, I also modified the code to adapt it to Python3 and finally
+it worked till the moment of cracking the password.</p>
+:ET
