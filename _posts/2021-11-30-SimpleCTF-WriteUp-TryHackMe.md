@@ -38,6 +38,10 @@ gobuster dir -u http://<ip-address> -x -.txt,.php,.html -w /usr/share/wordlists/
 
 It shows the `/simple` directory, which could be exploited. Here's a 
 
+![made_simple](img/simpleCTF/made_simple.png)
+
+![version](img/simpleCTF/version.png)
+
 Here the point is that this site is using a CMS called `CMS made simple`,
 version 2.2.8. I when to [exploit DB](https://www.exploit-db.com/) and search
 for exploits for this application. There's one for that version, and I could
@@ -58,6 +62,8 @@ python /usr/share/exploitdb/exploits/php/webapps/46635.py -u http://<ip-address>
 
 There's a hint in the web to recommend using the best110.txt dictionary instead of the
 classic rockyou.txt. It makes the process faster since is way shorter.
+
+![exploit](img/simpleCTF/exploit.png)
 
 At this point I could answer the next two questions:
 
