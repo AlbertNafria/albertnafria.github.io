@@ -62,11 +62,11 @@ hydra -l molly -P /usr/share/wordlists/rockyou.txt 10.10.166.99 -t 4 ssh
 ![Hydra output](/img/output_ssh.png)
 
 It didn't take long and after cracking the password I could ssh into the machine and
-the flag was the content of the file `user.txt`.
+the flag was the content of the file `flag2.txt`.
 
 ![ssh login](/img/ssh.png)
 
-As you can see, this room is very short and fast to do, but so useful at the
-same time since **Hydra** is a very important tool for password cracking. It also
-shows the importance of using strong passwords because it's so easy to crack the
+As you can see, this room is very short and fast to do, but so useful since
+**Hydra** it's an important tool for password cracking. It also shows the
+importance of using strong passwords because it's so easy to crack the
 most predictable ones.

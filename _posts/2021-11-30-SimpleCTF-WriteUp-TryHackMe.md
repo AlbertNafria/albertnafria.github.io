@@ -5,13 +5,13 @@ date: 2021-11-30 15:45:15 CET
 categories: jekyll update
 ---
 
-Simple CTF is a beginner level room on TryHackMe. There are few questions that
-guide you in which steps have to be done. It took me few hours to complete it as
-I found problems running the exploit, a python script. First I needed to solve
-some dependencies, I also modified the code to adapt it to Python3 and finally
-it worked till the moment of cracking the password.
+Simple CTF is a beginner level room on TryHackMe. It has few questions that
+guide you in which steps have to be done. Here's my walkthrough on solving that
+machine.
 
-Firs, as always, I started enumerating the system. Here is the output of this
+## Enumeration
+
+First, as always, I started enumerating the system. Here is the output of this
 nmap command:
 
 ``` bash
@@ -20,7 +20,7 @@ nmap -sCV <ip-address>
 
 ![nmap](img/simpleCTF/nmap.png)
 
-Whith this information I could answer some of the questions.
+With this information I could answer the first two questions.
 
 - How many services are running under port 1000?
 > Answer: `2`
@@ -28,7 +28,8 @@ Whith this information I could answer some of the questions.
 > Answer: `ssh`
 
 It has the port 80 open, so I typed the ip in my browser and it displayed the
-default's apache page. So I run **gobuster** to find hidden directories.
+default's apache page. I run **gobuster** to find hidden directories in order to
+get more clues.
 
 ``` bash
 gobuster dir -u http://<ip-address> -x -.txt,.php,.html -w /usr/share/wordlists/dirb/common.txt -t 64 -q
@@ -36,15 +37,18 @@ gobuster dir -u http://<ip-address> -x -.txt,.php,.html -w /usr/share/wordlists/
 
 ![gobuster](img/simpleCTF/gobuster.png)
 
-It shows the `/simple` directory, which could be exploited. Here's a 
+After fuzzing I found a the `/simple` directory, which seems potencially
+vulnerable. When I browsed it showed the interface of a CMS called *made
+simple*, and the version of the service was 2.2.8. 
 
 ![made_simple](img/simpleCTF/made_simple.png)
 
 ![version](img/simpleCTF/version.png)
 
-Here the point is that this site is using a CMS called `CMS made simple`,
-version 2.2.8. I when to [exploit DB](https://www.exploit-db.com/) and search
-for exploits for this application. There's one for that version, and I could
+## Vulnerability assessment
+
+I went to [exploit DB](https://www.exploit-db.com/) and search
+for exploits for this service. There's one for that version, and I could
 answer the next question:
 
 ![exploitDB](img/simpleCTF/exploitDB.png)
@@ -54,14 +58,16 @@ answer the next question:
 - To what kind of vulnerability is the application vulnerable?
 > Answer: `SQLi`
 
-This exploit is the 46635.py and I tried to run it with this command:
+This exploit is the `46635.py` and I tried to run it with this command:
 
 ``` bash
 python /usr/share/exploitdb/exploits/php/webapps/46635.py -u http://<ip-address>/simple --crack -w /usr/share/seclists/Passwords/Common-Credentials/best110.txt
 ```
 
-There's a hint in the web to recommend using the best110.txt dictionary instead of the
-classic rockyou.txt. It makes the process faster since is way shorter.
+With the parameter `--crack` it also outputs the password of the user. The
+wordlist I normally use for cracking passwords is the `rockyou.txt` as is the
+most complete one, but in this case there was a hint in the room recommending to
+use the `best110.txt`, which would make the process shorter.
 
 ![exploit](img/simpleCTF/exploit.png)
 
@@ -72,22 +78,43 @@ At this point I could answer the next two questions:
 - Where can you login with the details obtained?
 > Answer: `ssh`
 
-Having the user and his password I was able to ssh into the machine and read the
-user's flag. Also they ask if there's another user in the home directory
+## Gaining access
+
+The credentials found by the exploit allow to ssh into the machine, so there was
+no need to do anything with the ftp service that was also running.
+
+``` bash
+ssh -p 2222 mitch@<ip-address>
+```
+
+Being in the machine i was able to answer the next two questions, read the
+`user.txt` file and find another user with home directory.
 
 - What's the user flag?
-> Answer: `G00d j0b, keep up!`
+> Answer: `cat user.txt`
 - Is there any other user in the home directory? What's its name?
 > Answer: `sunbath`
 
-In order to escalate privileges I tried with `sudo -l` and found that you can
-run vim as root without the password. That's an easy one, so in vim as root I
-executed the command `:!sh` and immediately had a root shell. I could read the
-root flag and answer the last questions to complete the room.
+## Privilege escalation
+
+In order to escalate privileges I tried with `sudo -l` and found that was
+possible to run vim as root without the password. That's an easy one, so in vim
+as root I executed the command `:!sh` and immediately had a root shell. I could
+read the root flag and answer the last questions to complete the room.
 
 ![ssh](img/simpleCTF/root.png)
 
 - What can you leverage to spawn a privileged shell?
 > Answer: `vim`
 - What's the root flag?
-> Answer: `W3ll d0n3. You made it!`
+> Answer: `cat root.txt`
+
+Another way to solve this room would have been looking into the ftp server.
+Theres a file that shows that there's a user called mitch, and it was possible
+to get its password using **Hydra**:
+
+``` bash
+hydra -l mitch -P /usr/share/wordlists/rockyou.txt <ip-address> -s 2222 -t 4 ssh
+```
+
+![hydra](img/simpleCTF/hydra.png)

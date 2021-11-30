@@ -1,54 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-  <meta name="generator" content="Jekyll">
-
-  <title>Simple CTF WriteUp TryHackMe</title>
-
-  <link rel="stylesheet" href="/css/main.css">
-  
-  <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.7.1 -->
-<title>Simple CTF WriteUp TryHackMe | Hacker-Blog</title>
-<meta name="generator" content="Jekyll v4.2.0" />
-<meta property="og:title" content="Simple CTF WriteUp TryHackMe" />
-<meta name="author" content="Albert Nafría" />
-<meta property="og:locale" content="en_US" />
-<meta name="description" content="Simple CTF is a beginner level room on TryHackMe. It has few questions that guide you in which steps have to be done. Here’s the walkthrough on solving that machine." />
-<meta property="og:description" content="Simple CTF is a beginner level room on TryHackMe. It has few questions that guide you in which steps have to be done. Here’s the walkthrough on solving that machine." />
-<meta property="og:site_name" content="Hacker-Blog" />
-<meta property="og:type" content="article" />
-<meta property="article:published_time" content="2021-11-30T15:45:15+01:00" />
-<meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Simple CTF WriteUp TryHackMe" />
-<script type="application/ld+json">
-{"headline":"Simple CTF WriteUp TryHackMe","dateModified":"2021-11-30T15:45:15+01:00","datePublished":"2021-11-30T15:45:15+01:00","url":"/SimpleCTF-WriteUp-TryHackMe","mainEntityOfPage":{"@type":"WebPage","@id":"/SimpleCTF-WriteUp-TryHackMe"},"author":{"@type":"Person","name":"Albert Nafría"},"description":"Simple CTF is a beginner level room on TryHackMe. It has few questions that guide you in which steps have to be done. Here’s the walkthrough on solving that machine.","@type":"BlogPosting","@context":"https://schema.org"}</script>
-<!-- End Jekyll SEO tag -->
-
-</head>
-
-<body>
-  <div id="wrapper">
-    <header>
-  <div>
-    <a href="/">
-    
-    <h1>albert@home:~$</h1>
-    </a>
-    <div class="header-links">
-      <a href="/archive"><h2 class="header-link">Archive</h2></a>
-<a href="/about"><h2 class="header-link">About</h2></a>
-<a href="/atom.xml"><h2 class="header-link">RSS</h2></a>
-    </div>
-  </div>
-</header>
-    <div class="container">
-      <section id="main_content">
-        <article>
-  <h2>Simple CTF WriteUp TryHackMe</h2>
-  <time datetime="2021-11-30T15:45:15+01:00" class="by-line">30 Nov 2021</time>
-  <p>Simple CTF is a beginner level room on TryHackMe. It has few questions that
+I"�<p>Simple CTF is a beginner level room on TryHackMe. It has few questions that
 guide you in which steps have to be done. Here’s the walkthrough on solving that
 machine.</p>
 
@@ -196,23 +146,4 @@ to get its password using <strong>Hydra</strong>:</p>
 </code></pre></div></div>
 
 <p><img src="img/simpleCTF/hydra.png" alt="hydra" /></p>
-
-</article>
-      </section>
-    </div>
-  </div>
-
-   <footer>
-  <a href="https://creativecommons.org/licenses/by-nc/3.0/deed.en_US">
-    <span>
-        <b>Albert Nafría</b>
-    </span>
-    
-    <span>© 2021</span>
-  </a>
-</footer>
-
-  
-</body>
-
-</html>
+:ET

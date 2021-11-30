@@ -1,4 +1,4 @@
-I"�<p>Simple CTF is a beginner level room on TryHackMe. There are few questions that
+I"�<p>Simple CTF is a beginner level room on TryHackMe. There are few questions that
 guide you in which steps have to be done. It took me few hours to complete it as
 I found problems running the exploit, a python script. First I needed to solve
 some dependencies, I also modified the code to adapt it to Python3 and finally
@@ -37,6 +37,10 @@ default’s apache page. So I run <strong>gobuster</strong> to find hidden direc
 
 <p>It shows the <code class="language-plaintext highlighter-rouge">/simple</code> directory, which could be exploited. Here’s a</p>
 
+<p><img src="img/simpleCTF/made_simple.png" alt="made_simple" /></p>
+
+<p><img src="img/simpleCTF/version.png" alt="version" /></p>
+
 <p>Here the point is that this site is using a CMS called <code class="language-plaintext highlighter-rouge">CMS made simple</code>,
 version 2.2.8. I when to <a href="https://www.exploit-db.com/">exploit DB</a> and search
 for exploits for this application. There’s one for that version, and I could
@@ -47,12 +51,12 @@ answer the next question:</p>
 <ul>
   <li>What’s the CVE you’re using against the application?
     <blockquote>
-      <p>Answer: CVE-2019-9053</p>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">CVE-2019-9053</code></p>
     </blockquote>
   </li>
   <li>To what kind of vulnerability is the application vulnerable?
     <blockquote>
-      <p>Answer: SQLi</p>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">SQLi</code></p>
     </blockquote>
   </li>
 </ul>
@@ -61,6 +65,11 @@ answer the next question:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python /usr/share/exploitdb/exploits/php/webapps/46635.py <span class="nt">-u</span> http://&lt;ip-address&gt;/simple <span class="nt">--crack</span> <span class="nt">-w</span> /usr/share/seclists/Passwords/Common-Credentials/best110.txt
 </code></pre></div></div>
+
+<p>There’s a hint in the web to recommend using the best110.txt dictionary instead of the
+classic rockyou.txt. It makes the process faster since is way shorter.</p>
+
+<p><img src="img/simpleCTF/exploit.png" alt="exploit" /></p>
 
 <p>At this point I could answer the next two questions:</p>
 
