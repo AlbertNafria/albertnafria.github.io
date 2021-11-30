@@ -5,7 +5,7 @@ date: 2021-11-30 15:45:15 CET
 categories: jekyll update
 ---
 
-Simple CTF is a beginner level room on TryHackMe. It has few questions that
+Simple CTF is a beginner level room on [TryHackMe](https://tryhackme.com). It has few questions that
 guide you in which steps have to be done. Here's my walkthrough on solving that
 machine.
 
@@ -74,7 +74,7 @@ use the `best110.txt`, which would make the process shorter.
 At this point I could answer the next two questions:
 
 - What's the password?
-> Answer: `secret`
+> Answer: `******`
 - Where can you login with the details obtained?
 > Answer: `ssh`
 

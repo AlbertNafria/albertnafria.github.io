@@ -13,8 +13,8 @@
     
       <item>
         <title>Simple CTF WriteUp TryHackMe</title>
-        <description>&lt;p&gt;Simple CTF is a beginner level room on TryHackMe. It has few questions that
-guide you in which steps have to be done. Here’s the walkthrough on solving that
+        <description>&lt;p&gt;Simple CTF is a beginner level room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;. It has few questions that
+guide you in which steps have to be done. Here’s my walkthrough on solving that
 machine.&lt;/p&gt;
 
 &lt;h2 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h2&gt;
@@ -97,7 +97,7 @@ use the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;best1
 &lt;ul&gt;
   &lt;li&gt;What’s the password?
     &lt;blockquote&gt;
-      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;secret&lt;/code&gt;&lt;/p&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;******&lt;/code&gt;&lt;/p&gt;
     &lt;/blockquote&gt;
   &lt;/li&gt;
   &lt;li&gt;Where can you login with the details obtained?
