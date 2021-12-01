@@ -28,7 +28,7 @@ Read the above and have Hydra at the ready.
 
 I first deployed the machine and executed nmap for a quick recognisement. Nmap
 shows that has 2 ports open, 22 and 80. Then I type the IP in the browser and it
-appears a login form whith an image of Hydra, the many-headed snake from the
+appears a login form with an image of Hydra, the many-headed snake from the
 greek mythology.
 
 - Use Hydra to bruteforce molly's web password. What is flag 1? 
@@ -46,7 +46,7 @@ hydra -l molly -P /usr/share/wordlists/rockyou.txt 10.10.166.99 http-post-form "
 
 ![Hydra output](/img/output_post.png)
 
-Then I logged in whith that credentials and got the flag 1.
+Then I logged in with that credentials and got the flag 1.
 
 ![login](/img/login.png)
 

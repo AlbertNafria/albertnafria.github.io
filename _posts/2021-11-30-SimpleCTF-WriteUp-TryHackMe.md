@@ -109,9 +109,11 @@ read the root flag and answer the last questions to complete the room.
 - What's the root flag?
 > Answer: `cat root.txt`
 
+## Alternatives
+
 Another way to solve this room would have been looking into the ftp server.
-Theres a file that shows that there's a user called mitch, and it was possible
-to get its password using **Hydra**:
+There's a file that shows that there's another user called mitch, and it was
+possible to get its password using **Hydra**:
 
 ``` bash
 hydra -l mitch -P /usr/share/wordlists/rockyou.txt <ip-address> -s 2222 -t 4 ssh
