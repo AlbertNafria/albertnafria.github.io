@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Hacker-Blog</title>
-    <description>A Jekyll Blog Theme For Hackers</description>
+    <title>Albert's Blog</title>
+    <description>Mis ideas políticas</description>
     <link></link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
     <author>
@@ -10,6 +10,149 @@
       <email>albert.nafria@gmail.com</email>
       <uri>https://albertnafria.github.io</uri>
     </author>
+    
+      <item>
+        <title>Vulnversity WriteUp TryHackMe</title>
+        <description>&lt;p&gt;In this writeup I’ll review my walkthrough on the &lt;a href=&quot;https://tryhackme.com/room/vulnversity&quot;&gt;Vulnversity room&lt;/a&gt; 
+from TryHackMe. It’s a beginner level CTF, with questions that guide the steps
+to take in order to hack the machine. It also gives tips when using tools like
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nmap&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GoBuster&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;deploy-the-machine&quot;&gt;Deploy the machine&lt;/h2&gt;
+
+&lt;h1 id=&quot;reconnaissance&quot;&gt;Reconnaissance&lt;/h1&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;nmap flag&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;Description&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;-sV&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;Attempts to determine the version of the services running&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;-p &lt;x&gt; or -p-&lt;/x&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;Por scan for port &lt;x&gt; or scan all ports&lt;/x&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;-Pn&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;Disable host discovery and just scan for open ports&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;-A&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;Enables OS and version detection, executes in-build scripts for further enumeration&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;-sC&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;Scan with the default nmap scripts&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;-v&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;Vervose mode&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;-sU&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;UDP port scan&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;-sS&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;TCP SYN port scan&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Scan the box, how many ports are open?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;6&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;What version of the squid proxy is running on the machine?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;3.5.12&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;How many ports will nmap scan if the flag -p-400 was used?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;400&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Using the nmap flag -n what will it not resolve?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DNS&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;What is the most likely operating system this machine is running?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ubuntu&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;What port is the web server running on?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;3333&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;locating-directories-using-gobuster&quot;&gt;Locating directories using GoBuster&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;What is the directory that has an upload form page?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/internal/&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;compromise-the-webserver&quot;&gt;Compromise the webserver&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Try upload a few file types to the server, what common extension seems to be blocked?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.php&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Run this attack, what extension is allowed?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.phtml&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;What is the name of the user who manages the webserver?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Bill&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;What is the user flag?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;******************&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;privilege-escalation&quot;&gt;Privilege escalation&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;On the system, search for all SUID files. What file stands out?
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/systemctl&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Become root and get the last flag (/root/root.txt)
+    &lt;blockquote&gt;
+      &lt;p&gt;Answer: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;******************&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Sun, 12 Dec 2021 15:45:15 +0100</pubDate>
+        <link>//Vulnversity-WriteUp-TryHackMe</link>
+        <link href="/Vulnversity-WriteUp-TryHackMe"/>
+        <guid isPermaLink="true">/Vulnversity-WriteUp-TryHackMe</guid>
+      </item>
     
       <item>
         <title>Simple CTF WriteUp TryHackMe</title>
@@ -153,9 +296,11 @@ read the root flag and answer the last questions to complete the room.&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;h2 id=&quot;alternatives&quot;&gt;Alternatives&lt;/h2&gt;
+
 &lt;p&gt;Another way to solve this room would have been looking into the ftp server.
-Theres a file that shows that there’s a user called mitch, and it was possible
-to get its password using &lt;strong&gt;Hydra&lt;/strong&gt;:&lt;/p&gt;
+There’s a file that shows that there’s another user called mitch, and it was
+possible to get its password using &lt;strong&gt;Hydra&lt;/strong&gt;:&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hydra &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; mitch &lt;span class=&quot;nt&quot;&gt;-P&lt;/span&gt; /usr/share/wordlists/rockyou.txt &amp;lt;ip-address&amp;gt; &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; 2222 &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; 4 ssh
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -170,7 +315,7 @@ to get its password using &lt;strong&gt;Hydra&lt;/strong&gt;:&lt;/p&gt;
     
       <item>
         <title>Hydra WriteUp TryHackMe</title>
-        <description>&lt;p&gt;This room is very short comared to others and very straightforward. It’s part
+        <description>&lt;p&gt;This room is very short compared to others and very straightforward. It’s part
 of the &lt;strong&gt;Comptia Pentest+&lt;/strong&gt; path. Hydra is a pentest tool for cracking paswords
 with brute force.  The first task of the room is about what is that tool for and
 how to install it.  As it says, Hydra &lt;em&gt;bruteforces&lt;/em&gt; authentication in SSH, Web
@@ -192,7 +337,7 @@ use to get the flags.  This is my walkthrough on this room.&lt;/p&gt;
 
 &lt;p&gt;I first deployed the machine and executed nmap for a quick recognisement. Nmap
 shows that has 2 ports open, 22 and 80. Then I type the IP in the browser and it
-appears a login form whith an image of Hydra, the many-headed snake from the
+appears a login form with an image of Hydra, the many-headed snake from the
 greek mythology.&lt;/p&gt;
 
 &lt;ul&gt;
@@ -211,7 +356,7 @@ image it worked after very few attempts.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/output_post.png&quot; alt=&quot;Hydra output&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Then I logged in whith that credentials and got the flag 1.&lt;/p&gt;
+&lt;p&gt;Then I logged in with that credentials and got the flag 1.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/login.png&quot; alt=&quot;login&quot; /&gt;&lt;/p&gt;
 

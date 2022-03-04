@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Vulnversity WriteUp TryHackMe</title>
+
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Vulnversity WriteUp TryHackMe | Albert’s Blog</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Vulnversity WriteUp TryHackMe" />
+<meta name="author" content="Albert Nafría" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In this writeup I’ll review my walkthrough on the Vulnversity room from TryHackMe. It’s a beginner level CTF, with questions that guide the steps to take in order to hack the machine. It also gives tips when using tools like nmap or GoBuster." />
+<meta property="og:description" content="In this writeup I’ll review my walkthrough on the Vulnversity room from TryHackMe. It’s a beginner level CTF, with questions that guide the steps to take in order to hack the machine. It also gives tips when using tools like nmap or GoBuster." />
+<meta property="og:site_name" content="Albert’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-12-12T15:45:15+01:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Vulnversity WriteUp TryHackMe" />
+<script type="application/ld+json">
+{"headline":"Vulnversity WriteUp TryHackMe","dateModified":"2021-12-12T15:45:15+01:00","datePublished":"2021-12-12T15:45:15+01:00","url":"/Vulnversity-WriteUp-TryHackMe","mainEntityOfPage":{"@type":"WebPage","@id":"/Vulnversity-WriteUp-TryHackMe"},"author":{"@type":"Person","name":"Albert Nafría"},"description":"In this writeup I’ll review my walkthrough on the Vulnversity room from TryHackMe. It’s a beginner level CTF, with questions that guide the steps to take in order to hack the machine. It also gives tips when using tools like nmap or GoBuster.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div>
+    <a href="/">
+    
+    <h1>albert@home:~$</h1>
+    </a>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+<a href="/atom.xml"><h2 class="header-link">RSS</h2></a>
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>Vulnversity WriteUp TryHackMe</h2>
+  <time datetime="2021-12-12T15:45:15+01:00" class="by-line">12 Dec 2021</time>
+  <p>In this writeup I’ll review my walkthrough on the <a href="https://tryhackme.com/room/vulnversity">Vulnversity room</a> 
+from TryHackMe. It’s a beginner level CTF, with questions that guide the steps
+to take in order to hack the machine. It also gives tips when using tools like
+<code class="language-plaintext highlighter-rouge">nmap</code> or <code class="language-plaintext highlighter-rouge">GoBuster</code>.</p>
+
+<h2 id="deploy-the-machine">Deploy the machine</h2>
+
+<h1 id="reconnaissance">Reconnaissance</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">nmap flag</th>
+      <th style="text-align: center">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">-sV</td>
+      <td style="text-align: center">Attempts to determine the version of the services running</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-p <x> or -p-</x></td>
+      <td style="text-align: center">Por scan for port <x> or scan all ports</x></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-Pn</td>
+      <td style="text-align: center">Disable host discovery and just scan for open ports</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-A</td>
+      <td style="text-align: center">Enables OS and version detection, executes in-build scripts for further enumeration</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-sC</td>
+      <td style="text-align: center">Scan with the default nmap scripts</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-v</td>
+      <td style="text-align: center">Vervose mode</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-sU</td>
+      <td style="text-align: center">UDP port scan</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-sS</td>
+      <td style="text-align: center">TCP SYN port scan</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>Scan the box, how many ports are open?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">6</code></p>
+    </blockquote>
+  </li>
+  <li>What version of the squid proxy is running on the machine?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">3.5.12</code></p>
+    </blockquote>
+  </li>
+  <li>How many ports will nmap scan if the flag -p-400 was used?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">400</code></p>
+    </blockquote>
+  </li>
+  <li>Using the nmap flag -n what will it not resolve?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">DNS</code></p>
+    </blockquote>
+  </li>
+  <li>What is the most likely operating system this machine is running?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">Ubuntu</code></p>
+    </blockquote>
+  </li>
+  <li>What port is the web server running on?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">3333</code></p>
+    </blockquote>
+  </li>
+</ul>
+
+<h2 id="locating-directories-using-gobuster">Locating directories using GoBuster</h2>
+
+<ul>
+  <li>What is the directory that has an upload form page?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">/internal/</code></p>
+    </blockquote>
+  </li>
+</ul>
+
+<h2 id="compromise-the-webserver">Compromise the webserver</h2>
+
+<ul>
+  <li>Try upload a few file types to the server, what common extension seems to be blocked?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">.php</code></p>
+    </blockquote>
+  </li>
+  <li>Run this attack, what extension is allowed?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">.phtml</code></p>
+    </blockquote>
+  </li>
+  <li>What is the name of the user who manages the webserver?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">Bill</code></p>
+    </blockquote>
+  </li>
+  <li>What is the user flag?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">******************</code></p>
+    </blockquote>
+  </li>
+</ul>
+
+<h2 id="privilege-escalation">Privilege escalation</h2>
+
+<ul>
+  <li>On the system, search for all SUID files. What file stands out?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">/bin/systemctl</code></p>
+    </blockquote>
+  </li>
+  <li>Become root and get the last flag (/root/root.txt)
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">******************</code></p>
+    </blockquote>
+  </li>
+</ul>
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="https://creativecommons.org/licenses/by-nc/3.0/deed.en_US">
+    <span>
+        <b>Albert Nafría</b>
+    </span>
+    
+    <span>© 2021</span>
+  </a>
+</footer>
+
+  
+</body>
+
+</html>

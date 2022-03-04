@@ -1,0 +1,135 @@
+I"<p>In this writeup I’ll review my walkthrough on the <a href="https://tryhackme.com/room/vulnversity">Vulnversity room</a> 
+from TryHackMe. It’s a beginner level CTF, with questions that guide the steps
+to take in order to hack the machine. It also gives tips when using tools like
+<code class="language-plaintext highlighter-rouge">nmap</code> or <code class="language-plaintext highlighter-rouge">GoBuster</code>.</p>
+
+<h2 id="deploy-the-machine">Deploy the machine</h2>
+
+<h1 id="reconnaissance">Reconnaissance</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>nmap flag</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>-sV</td>
+      <td>Attempts to determine the version of the services running</td>
+    </tr>
+    <tr>
+      <td>-p <x> or -p-</x></td>
+      <td>Por scan for port <x> or scan all ports</x></td>
+    </tr>
+    <tr>
+      <td>-Pn</td>
+      <td>Disable host discovery and just scan for open ports</td>
+    </tr>
+    <tr>
+      <td>-A</td>
+      <td>Enables OS and version detection, executes in-build scripts for further enumeration</td>
+    </tr>
+    <tr>
+      <td>-sC</td>
+      <td>Scan with the default nmap scripts</td>
+    </tr>
+    <tr>
+      <td>-v</td>
+      <td>Vervose mode</td>
+    </tr>
+    <tr>
+      <td>-sU</td>
+      <td>UDP port scan</td>
+    </tr>
+    <tr>
+      <td>-sS</td>
+      <td>TCP SYN port scan</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>Scan the box, how many ports are open?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">6</code></p>
+    </blockquote>
+  </li>
+  <li>What version of the squid proxy is running on the machine?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">3.5.12</code></p>
+    </blockquote>
+  </li>
+  <li>How many ports will nmap scan if the flag -p-400 was used?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">400</code></p>
+    </blockquote>
+  </li>
+  <li>Using the nmap flag -n what will it not resolve?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">DNS</code></p>
+    </blockquote>
+  </li>
+  <li>What is the most likely operating system this machine is running?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">Ubuntu</code></p>
+    </blockquote>
+  </li>
+  <li>What port is the web server running on?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">3333</code></p>
+    </blockquote>
+  </li>
+</ul>
+
+<h2 id="locating-directories-using-gobuster">Locating directories using GoBuster</h2>
+
+<ul>
+  <li>What is the directory that has an upload form page?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">/internal/</code></p>
+    </blockquote>
+  </li>
+</ul>
+
+<h2 id="compromise-the-webserver">Compromise the webserver</h2>
+
+<ul>
+  <li>Try upload a few file types to the server, what common extension seems to be blocked?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">.php</code></p>
+    </blockquote>
+  </li>
+  <li>Run this attack, what extension is allowed?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">.phtml</code></p>
+    </blockquote>
+  </li>
+  <li>What is the name of the user who manages the webserver?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">Bill</code></p>
+    </blockquote>
+  </li>
+  <li>What is the user flag?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">******************</code></p>
+    </blockquote>
+  </li>
+</ul>
+
+<h2 id="privilege-escalation">Privilege escalation</h2>
+
+<ul>
+  <li>On the system, search for all SUID files. What file stands out?
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">/bin/systemctl</code></p>
+    </blockquote>
+  </li>
+  <li>Become root and get the last flag (/root/root.txt)
+    <blockquote>
+      <p>Answer: <code class="language-plaintext highlighter-rouge">******************</code></p>
+    </blockquote>
+  </li>
+</ul>
+:ET

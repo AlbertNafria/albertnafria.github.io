@@ -5,7 +5,7 @@ date: 2021-11-28 15:45:15 CET
 categories: jekyll update
 ---
 
-This room is very short comared to others and very straightforward. It's part
+This room is very short compared to others and very straightforward. It's part
 of the **Comptia Pentest+** path. Hydra is a pentest tool for cracking paswords
 with brute force.  The first task of the room is about what is that tool for and
 how to install it.  As it says, Hydra *bruteforces* authentication in SSH, Web
