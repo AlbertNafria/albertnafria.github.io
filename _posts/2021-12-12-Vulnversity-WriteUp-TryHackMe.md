@@ -69,5 +69,5 @@ to take in order to hack the machine. It also gives tips when using tools like
 
 - On the system, search for all SUID files. What file stands out?
 > Answer: `/bin/systemctl`
-- Become root and get the last flag (/root/root.txt)
+- Become root and get the last flag (`/root/root.txt`)
 > Answer: `******************`
